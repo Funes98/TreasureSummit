@@ -3,5 +3,5 @@ export interface Wildcard {
   name: string;
   icon: string;
   description: string;
-  used: boolean;
+  quantity:number
 }

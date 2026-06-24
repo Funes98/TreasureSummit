@@ -350,3 +350,135 @@ h1 {
   margin-bottom: 0.5rem;
   line-height: 1.5;
 }
+
+.name-warning-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+
+  padding: 1rem;
+
+  background: rgba(6, 3, 1, 0.78);
+  backdrop-filter: blur(5px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.name-warning-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 1.5rem;
+
+  border-radius: 26px;
+  background: linear-gradient(
+    180deg,
+    rgba(24, 14, 5, 0.98),
+    rgba(10, 6, 2, 0.98)
+  );
+  border: 1px solid rgba(255, 209, 102, 0.32);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+
+  text-align: center;
+  color: #fff6df;
+}
+
+.name-warning-card__badge {
+  display: inline-flex;
+  margin-bottom: 0.9rem;
+  padding: 0.4rem 0.8rem;
+
+  border-radius: 999px;
+  background: rgba(255, 209, 102, 0.13);
+  border: 1px solid rgba(255, 209, 102, 0.28);
+
+  color: #ffd166;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.name-warning-card h2 {
+  margin: 0;
+
+  color: #ffd166;
+  font-size: 1.6rem;
+  line-height: 1.15;
+}
+
+.name-warning-card p {
+  margin: 0.9rem 0 0;
+
+  color: rgba(255, 246, 223, 0.84);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.name-warning-card strong {
+  color: #ffd166;
+}
+
+.name-warning-card__actions {
+  margin-top: 1.3rem;
+
+  display: flex;
+  gap: 0.75rem;
+}
+
+.warning-btn {
+  flex: 1;
+
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+
+  border-radius: 999px;
+  border: 0;
+
+  cursor: pointer;
+  font-weight: 900;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.warning-btn:hover {
+  transform: translateY(-2px);
+}
+
+.warning-btn--primary {
+  background: #ffd166;
+  color: #1a1005;
+}
+
+.warning-btn--secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffd166;
+  border: 1px solid rgba(255, 209, 102, 0.28);
+}
+
+@media (max-width: 520px) {
+  .name-warning-card {
+    padding: 1rem;
+    border-radius: 22px;
+  }
+
+  .name-warning-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .name-warning-card p {
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .name-warning-card__actions {
+    flex-direction: column;
+  }
+
+  .warning-btn {
+    width: 100%;
+    min-height: 46px;
+    font-size: 0.88rem;
+  }
+}

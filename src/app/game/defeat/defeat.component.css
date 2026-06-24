@@ -1,0 +1,325 @@
+.defeat {
+  position: relative;
+  min-height: calc(100vh - 72px);
+  padding: 2rem 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  color: #fff6df;
+
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255, 95, 95, 0.16), transparent 26%),
+    radial-gradient(circle at 80% 20%, rgba(255, 209, 102, 0.12), transparent 24%),
+    linear-gradient(180deg, #15141f 0%, #1b1212 48%, #080302 100%);
+}
+
+.defeat::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent 30%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 0,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 18px
+    );
+
+  pointer-events: none;
+}
+
+.defeat__mist {
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at 20% 70%, rgba(255, 255, 255, 0.08), transparent 26%),
+    radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.06), transparent 28%);
+
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.defeat__glow {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+
+  border-radius: 50%;
+  background: rgba(255, 95, 95, 0.16);
+  filter: blur(90px);
+}
+
+.defeat__container {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 760px;
+}
+
+.defeat-card {
+  padding: 2rem;
+
+  border-radius: 30px;
+  background: rgba(10, 6, 5, 0.86);
+  border: 1px solid rgba(255, 209, 102, 0.24);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.58);
+  backdrop-filter: blur(10px);
+
+  text-align: center;
+}
+
+.defeat-card__badge {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  padding: 0.42rem 0.85rem;
+
+  border-radius: 999px;
+  background: rgba(255, 95, 95, 0.12);
+  border: 1px solid rgba(255, 95, 95, 0.3);
+
+  color: #ff9b9b;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.defeat-card h1 {
+  margin: 0;
+
+  color: #ffd166;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1;
+  font-weight: 950;
+}
+
+.defeat-card__quote {
+  max-width: 640px;
+  margin: 1rem auto 0;
+
+  color: rgba(255, 246, 223, 0.9);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.defeat-card__text {
+  max-width: 620px;
+  margin: 1.2rem auto 0;
+
+  color: rgba(255, 246, 223, 0.76);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.defeat-scene {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 170px;
+  margin: 1.4rem auto;
+
+  border-radius: 26px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 209, 102, 0.18), transparent 24%),
+    linear-gradient(180deg, rgba(60, 62, 96, 0.42), rgba(31, 16, 12, 0.92));
+  border: 1px solid rgba(255, 209, 102, 0.2);
+}
+
+.defeat-scene__mountain {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+
+  transform: translateX(-50%);
+  font-size: 5rem;
+
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.5));
+}
+
+.defeat-scene__storm {
+  position: absolute;
+  top: 26px;
+  right: 90px;
+
+  font-size: 2rem;
+  animation: stormFlash 1.4s ease-in-out infinite;
+}
+
+.defeat-scene__flag {
+  position: absolute;
+  left: 90px;
+  bottom: 72px;
+
+  font-size: 2rem;
+  transform: rotate(-12deg);
+}
+
+.defeat-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.defeat-stat {
+  padding: 0.85rem;
+
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 209, 102, 0.18);
+}
+
+.defeat-stat span {
+  display: block;
+  margin-bottom: 0.25rem;
+
+  color: rgba(255, 246, 223, 0.62);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.defeat-stat strong {
+  color: #ffd166;
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.defeat-card__actions {
+  margin-top: 1.4rem;
+
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.defeat-btn {
+  border: 0;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 170px;
+  min-height: 48px;
+  padding: 0.8rem 1.1rem;
+
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 950;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.defeat-btn:hover {
+  transform: translateY(-2px);
+}
+
+.defeat-btn--primary {
+  background: #ffd166;
+  color: #1a1005;
+}
+
+.defeat-btn--secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffd166;
+  border: 1px solid rgba(255, 209, 102, 0.28);
+}
+
+@keyframes stormFlash {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  45% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 600px) {
+  .defeat {
+    min-height: calc(100vh - 118px);
+    padding: 1rem 0.75rem;
+    align-items: flex-start;
+  }
+
+  .defeat-card {
+    padding: 1rem;
+    border-radius: 22px;
+  }
+
+  .defeat-card h1 {
+    font-size: 2rem;
+  }
+
+  .defeat-card__quote {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .defeat-card__text {
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
+
+  .defeat-scene {
+    height: 140px;
+    margin: 1rem auto;
+    border-radius: 20px;
+  }
+
+  .defeat-scene__mountain {
+    font-size: 4rem;
+  }
+
+  .defeat-scene__storm {
+    top: 20px;
+    right: 70px;
+    font-size: 1.6rem;
+  }
+
+  .defeat-scene__flag {
+    left: 70px;
+    bottom: 58px;
+    font-size: 1.6rem;
+  }
+
+  .defeat-stats {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .defeat-stat {
+    padding: 0.7rem;
+  }
+
+  .defeat-card__actions {
+    flex-direction: column;
+  }
+
+  .defeat-btn {
+    width: 100%;
+    min-height: 46px;
+    font-size: 0.9rem;
+  }
+}

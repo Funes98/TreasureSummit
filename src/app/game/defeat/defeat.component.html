@@ -1,0 +1,51 @@
+<section class="defeat">
+  <div class="defeat__mist"></div>
+  <div class="defeat__glow"></div>
+
+  <div class="defeat__container">
+    <article class="defeat-card">
+      <span class="defeat-card__badge">☠️ La montaña ha hablado</span>
+
+      <h1>{{ playerName }}, tu ascenso termina aquí</h1>
+
+      <p class="defeat-card__quote">
+        “No todos los que buscan el tesoro están preparados para encontrarlo.
+        Hoy la cima te ha vencido, pero tu nombre ya forma parte del sendero.”
+      </p>
+
+      <div class="defeat-scene">
+        <div class="defeat-scene__mountain">⛰️</div>
+        <div class="defeat-scene__storm">⚡</div>
+        <div class="defeat-scene__flag">🏴‍☠️</div>
+      </div>
+
+      <div class="defeat-stats">
+        <div class="defeat-stat">
+          <span>Puntos finales</span>
+          <strong>{{ score }}</strong>
+        </div>
+
+        <div class="defeat-stat">
+          <span>Pregunta alcanzada</span>
+          <strong>P{{ reachedQuestion }}</strong>
+        </div>
+
+        <div class="defeat-stat">
+          <span>Aciertos</span>
+          <strong>{{ correctAnswers }}</strong>
+        </div>
+      </div>
+
+      <p class="defeat-card__text">
+        Barbablanca recoge tu historia y la deja escrita en el ranking.
+        Quizá hoy no conquistaste el tesoro, pero el camino sigue esperando.
+      </p>
+
+      <div class="defeat-card__actions">
+        <a routerLink="/ranking" class="defeat-btn defeat-btn--primary">
+          Ver ranking
+        </a>
+      </div>
+    </article>
+  </div>
+</section>

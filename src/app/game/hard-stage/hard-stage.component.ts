@@ -16,6 +16,8 @@ export class HardStageComponent {
   @Input({ required: true }) playerName!: string;
   @Input({ required: true }) timeLeft!: number;
   @Input({ required: true }) wildcards!: Wildcard[];
+  @Input() disabledOptions: string[] = [];
+  @Input() usedWildcardIdsThisQuestion: string[] = [];
   @Input({ required: true }) canRetire!: boolean;
   @Input({ required: true }) showBlackbeardTemptation!: boolean;
 

@@ -110,4 +110,41 @@
       />
     </div>
   </div>
+  @if (showDuplicateNameWarning) {
+  <div class="name-warning-overlay">
+    <div class="name-warning-card">
+      <span class="name-warning-card__badge">⚠️ Nombre ya usado</span>
+
+      <h2>Ese nombre ya aparece en el ranking</h2>
+
+      <p>
+        El nombre <strong>{{ duplicatedName }}</strong> ya tiene una puntuación
+        registrada en Treasure Summit.
+      </p>
+
+      <p>
+        Te recomendamos elegir otro nombre para que tu partida quede mejor
+        identificada en el ranking.
+      </p>
+
+      <div class="name-warning-card__actions">
+        <button
+          type="button"
+          class="warning-btn warning-btn--secondary"
+          (click)="changeName()"
+        >
+          Cambiar nombre
+        </button>
+
+        <button
+          type="button"
+          class="warning-btn warning-btn--primary"
+          (click)="confirmDuplicatedName()"
+        >
+          Usarlo igualmente
+        </button>
+      </div>
+    </div>
+  </div>
+}
 </section>

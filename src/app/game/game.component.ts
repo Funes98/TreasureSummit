@@ -25,9 +25,18 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
 
   usedSecondChance = false;
   wildcardUsedThisQuestion = false;
+  showWrongAnswerChoice = false;
 
   showBlackbeardTemptation = false;
   showFinalBlackbeardThreat = false;
+
+  barbablancaChanceUsed = false;
+
+  showBarbablancaGift = false;
+  barbablancaGiftGiven = false;
+
+  disabledOptions: string[] = [];
+  usedWildcardIdsThisQuestion: string[] = [];
 
   wildcards: Wildcard[] = [
     {
@@ -35,21 +44,21 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
       name: '+30s',
       icon: '⏳',
       description: 'Añade 30 segundos extra al temporizador.',
-      used: false
+      quantity: 1
     },
     {
       id: 'fifty',
       name: '50/50',
       icon: '⚓',
       description: 'Elimina dos respuestas incorrectas.',
-      used: false
+      quantity: 1
     },
     {
       id: 'change',
       name: 'Cambio',
       icon: '🗺️',
       description: 'Cambia la pregunta actual por otra.',
-      used: false
+      quantity: 1
     }
   ];
 
@@ -244,13 +253,18 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
   }
 
   useWildcard(wildcardId: string): void {
-  const wildcard = this.wildcards.find(item => item.id === wildcardId);
+    const wildcard = this.wildcards.find(item => item.id === wildcardId);
 
-  if (!wildcard || wildcard.used) {
-    return;
-  }
+    if (!wildcard || wildcard.quantity <= 0) {
+      return;
+    }
 
-    wildcard.used = true;
+    if (this.usedWildcardIdsThisQuestion.includes(wildcardId)) {
+      return;
+    }
+
+    wildcard.quantity--;
+    this.usedWildcardIdsThisQuestion.push(wildcardId);
     this.wildcardUsedThisQuestion = true;
 
     if (wildcardId === 'time') {
@@ -262,13 +276,32 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
     }
 
     if (wildcardId === 'fifty') {
-      console.log('Comodín 50/50 usado');
+      this.applyFiftyFifty();
     }
 
     if (wildcardId === 'change') {
       console.log('Comodín cambio usado');
     }
   }
+  applyFiftyFifty(): void {
+  const question = this.currentQuestion;
+
+  const incorrectOptions = question.options.filter(
+    option => option !== question.correctAnswer
+  );
+
+  const randomIncorrectOption =
+    incorrectOptions[Math.floor(Math.random() * incorrectOptions.length)];
+
+  const allowedOptions = [
+    question.correctAnswer,
+    randomIncorrectOption
+  ];
+
+  this.disabledOptions = question.options.filter(
+    option => !allowedOptions.includes(option)
+  );
+}
 
   goNextQuestion(): void {
     const nextQuestionIndex = this.currentQuestionIndex + 1;
@@ -279,7 +312,8 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
       return;
     }
 
-    // Antes de la pregunta 10 aparece Barbanegra tentando al jugador
+    // Antes de la pregunta 10 aparece Barbanegra
+    // Pregunta 10 = índice 9
     if (nextQuestionIndex === 9) {
       this.currentQuestionIndex = nextQuestionIndex;
       this.stopTimer();
@@ -287,7 +321,16 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
       return;
     }
 
+    // Después de acertar la pregunta 10 aparece Barbablanca
+    // Si estoy en índice 9, acabo de acertar la pregunta 10
+    if (this.currentQuestionIndex === 9 && !this.barbablancaGiftGiven) {
+      this.stopTimer();
+      this.showBarbablancaGift = true;
+      return;
+    }
+
     // Antes de la pregunta 13 aparece Barbanegra desesperado
+    // Pregunta 13 = índice 12
     if (nextQuestionIndex === 12) {
       this.currentQuestionIndex = nextQuestionIndex;
       this.stopTimer();
@@ -314,6 +357,34 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
     this.finishGame('retired');
   }
 
+  chooseExtraWildcard(wildcardId: string): void {
+    const wildcard = this.wildcards.find(item => item.id === wildcardId);
+
+    if (!wildcard) {
+      return;
+    }
+
+    wildcard.quantity++;
+
+    this.barbablancaGiftGiven = true;
+    this.showBarbablancaGift = false;
+
+    // Avanzamos de la pregunta 10 a la 11
+    this.currentQuestionIndex++;
+
+    this.prepareNewQuestion();
+  }
+
+  skipBarbablancaGift(): void {
+    this.barbablancaGiftGiven = true;
+    this.showBarbablancaGift = false;
+
+    // Avanzamos de la pregunta 10 a la 11
+    this.currentQuestionIndex++;
+
+    this.prepareNewQuestion();
+  }
+
   
 
   
@@ -321,11 +392,12 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
     prepareNewQuestion(): void {
       this.wildcardUsedThisQuestion = false;
       this.startQuestionTimer();
+      this.disabledOptions = [];
+      this.usedWildcardIdsThisQuestion = [];
     }
 
-    continueAfterBlackbeard(): void {
+  continueAfterBlackbeard(): void {
     this.showBlackbeardTemptation = false;
-    this.currentQuestionIndex = 9; // pregunta 10
     this.prepareNewQuestion();
   }
 
@@ -355,27 +427,30 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
   }
 
   handleWrongAnswer(): void {
-    const isHardTier =
-      this.currentQuestion.tier === 'hard' ||
-      this.currentQuestion.tier === 'very-hard';
+    this.stopTimer();
 
-    if (isHardTier && !this.usedSecondChance) {
-      this.usedSecondChance = true;
-      this.totalScore = Math.floor(this.totalScore / 2);
-      this.wildcards = this.wildcards.map(wildcard => ({
-        ...wildcard,
-        used: true
-      }));
-
-      alert(
-        'Barbablanca te concede otra oportunidad, pero pierdes todos tus comodines y la mitad de tus puntos.'
-      );
-
-      this.goNextQuestion();
+    if (this.barbablancaChanceUsed) {
+      this.finishGame('failed');
       return;
     }
 
-    this.finishGame('failed');
+    this.showWrongAnswerChoice = true;
+  }
+  abandonWithHonor(): void {
+  this.showWrongAnswerChoice = false;
+  this.finishGame('retired');
+  }
+
+  acceptBarbablancaChance(): void {
+    this.showWrongAnswerChoice = false;
+    this.barbablancaChanceUsed = true;
+
+    // Barbablanca solo te da esta oportunidad una vez en toda la partida
+    this.totalScore = Math.floor(this.totalScore / 2);
+
+    // La pregunta se mantiene igual, pero reiniciamos el intento
+    this.wildcardUsedThisQuestion = false;
+    this.startQuestionTimer();
   }
 
   retireGame(): void {
@@ -390,7 +465,9 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
       score: this.totalScore,
       won: status === 'completed',
       correctAnswers: this.correctAnswers,
-      reachedQuestion: status === 'completed' ? this.questions.length : this.questionNumber,
+      reachedQuestion: status === 'completed'
+        ? this.questions.length
+        : this.questionNumber,
       date: new Date().toISOString()
     };
 
@@ -402,12 +479,25 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
 
     localStorage.setItem('treasure_ranking', JSON.stringify(ranking));
 
+    // Guardamos el último resultado para poder mostrarlo en derrota/victoria
+    localStorage.setItem('treasure_last_result', JSON.stringify(rankingItem));
+
     if (status === 'completed') {
-      this.router.navigate(['/victory']);
+      this.router.navigateByUrl('/victory');
       return;
     }
 
-    this.router.navigate(['/ranking']);
+    if (status === 'failed') {
+      this.router.navigateByUrl('/defeat');
+      return;
+    }
+
+    if (status === 'retired') {
+      this.router.navigateByUrl('/defeat');
+      return;
+    }
+
+    this.router.navigateByUrl('/ranking');
   }
 
 }

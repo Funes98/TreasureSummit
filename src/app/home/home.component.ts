@@ -16,6 +16,10 @@ export class HomeComponent {
 
   router:Router=inject(Router)
 
+  showDuplicateNameWarning = false;
+  
+  duplicatedName = '';
+
   openNameForm(): void {
     this.showNameForm = true;
     this.showRules = false;
@@ -24,6 +28,7 @@ export class HomeComponent {
   goBack(): void {
     this.showNameForm = false;
     this.playerName = '';
+    this.showDuplicateNameWarning = false;
   }
 
   toggleRules(): void {
@@ -37,8 +42,45 @@ export class HomeComponent {
       return;
     }
 
+    if (this.nameExistsInRanking(name)) {
+      this.duplicatedName = name;
+      this.showDuplicateNameWarning = true;
+      return;
+    }
+
+    this.beginGame(name);
+  }
+
+  confirmDuplicatedName(): void {
+    this.showDuplicateNameWarning = false;
+    this.beginGame(this.duplicatedName);
+  }
+
+  changeName(): void {
+    this.showDuplicateNameWarning = false;
+  }
+
+  private beginGame(name: string): void {
     localStorage.setItem('treasure_player_name', name);
-    this.router.navigateByUrl('/game')
+    this.router.navigate(['/game']);
+  }
+
+  private nameExistsInRanking(name: string): boolean {
+    const ranking = JSON.parse(localStorage.getItem('treasure_ranking') || '[]');
+
+    const normalizedName = this.normalizeName(name);
+
+    return ranking.some((result: any) => {
+      return this.normalizeName(result.playerName || '') === normalizedName;
+    });
+  }
+
+  private normalizeName(name: string): string {
+    return name
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
   }
 
 

@@ -37,13 +37,19 @@
             <button
               type="button"
               class="wildcard-mini"
-              [class.wildcard-mini--used]="wildcard.used"
-              [disabled]="wildcard.used"
+              [class.wildcard-mini--used]="wildcard.quantity <= 0"
+              [class.wildcard-mini--blocked]="usedWildcardIdsThisQuestion.includes(wildcard.id)"
+              [disabled]="wildcard.quantity <= 0 || usedWildcardIdsThisQuestion.includes(wildcard.id)"
               (click)="useWildcard(wildcard.id)"
               [title]="wildcard.description"
             >
               <span class="wildcard-mini__icon">{{ wildcard.icon }}</span>
-              <span class="wildcard-mini__name">{{ wildcard.name }}</span>
+              <span class="wildcard-mini__name">
+              {{ wildcard.name }}
+              @if (wildcard.quantity > 1) {
+                x{{ wildcard.quantity }}
+              }
+            </span>
             </button>
           }
         </div>
@@ -89,13 +95,15 @@
 
       <div class="answers-grid">
         @for (option of question.options; track option) {
-          <button
-            type="button"
-            class="answer-button"
-            (click)="selectAnswer(option)"
-          >
-            {{ option }}
-          </button>
+        <button
+          type="button"
+          class="answer-button"
+          [class.answer-button--disabled]="disabledOptions.includes(option)"
+          [disabled]="disabledOptions.includes(option)"
+          (click)="selectAnswer(option)"
+        >
+          {{ option }}
+        </button>
         }
       </div>
 

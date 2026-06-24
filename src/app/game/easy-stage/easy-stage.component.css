@@ -852,3 +852,29 @@
     font-size: 1rem;
   }
 }
+.answer-button--disabled,
+.answer-button:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  filter: grayscale(1);
+  transform: none;
+}
+
+.answer-button--disabled:hover,
+.answer-button:disabled:hover {
+  transform: none;
+  border-color: rgba(255, 209, 102, 0.28);
+  box-shadow: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 209, 102, 0.06));
+}
+.wildcard-mini--blocked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: rgba(255, 209, 102, 0.18);
+}
+
+.wildcard-mini--blocked:hover {
+  transform: none;
+  background: rgba(12, 13, 22, 0.8);
+}

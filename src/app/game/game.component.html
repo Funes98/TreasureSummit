@@ -10,6 +10,8 @@
         [timeLeft]="timeLeft"
         [wildcards]="wildcards"
         [canRetire]="canRetire"
+        [disabledOptions]="disabledOptions"
+        [usedWildcardIdsThisQuestion]="usedWildcardIdsThisQuestion"
         (answerSelected)="answerQuestion($event)"
         (wildcardSelected)="useWildcard($event)"
         (retire)="retireGame()"
@@ -25,6 +27,8 @@
       [timeLeft]="timeLeft"
       [wildcards]="wildcards"
       [canRetire]="canRetire"
+      [disabledOptions]="disabledOptions"
+      [usedWildcardIdsThisQuestion]="usedWildcardIdsThisQuestion"
       (answerSelected)="answerQuestion($event)"
       (wildcardSelected)="useWildcard($event)"
       (retire)="retireGame()"
@@ -41,6 +45,8 @@
     [timeLeft]="timeLeft"
     [wildcards]="wildcards"
     [canRetire]="canRetire"
+    [disabledOptions]="disabledOptions"
+    [usedWildcardIdsThisQuestion]="usedWildcardIdsThisQuestion"
     [showBlackbeardTemptation]="showBlackbeardTemptation"
     (answerSelected)="answerQuestion($event)"
     (wildcardSelected)="useWildcard($event)"
@@ -60,7 +66,9 @@
       [timeLeft]="timeLeft"
       [wildcards]="wildcards"
       [canRetire]="canRetire"
+      [disabledOptions]="disabledOptions"
       [showFinalThreat]="showFinalBlackbeardThreat"
+      [usedWildcardIdsThisQuestion]="usedWildcardIdsThisQuestion"
       (answerSelected)="answerQuestion($event)"
       (wildcardSelected)="useWildcard($event)"
       (retire)="retireGame()"
@@ -68,8 +76,79 @@
       (surrenderFinalChallenge)="surrenderAfterFinalThreat()"
     />
   }
-
-
-
   }
+    @if (showWrongAnswerChoice) {
+    <div class="wrong-answer-overlay">
+      <div class="wrong-answer-card">
+        <span class="wrong-answer-card__badge">⚠️ Respuesta incorrecta</span>
+
+        <h2>Barbablanca se interpone en tu camino</h2>
+
+        <p>
+          Has fallado la pregunta, {{ playerName }}. La montaña te exige una decisión:
+          abandonar ahora con honor y conservar tu puntuación, o aceptar una última
+          oportunidad a cambio de perder la mitad de tus puntos.
+        </p>
+
+        <div class="wrong-answer-card__deal">
+          <span>📜 Trato de Barbablanca</span>
+          <strong>Otra oportunidad, pero perderás la mitad de tus puntos actuales.</strong>
+        </div>
+
+        <div class="wrong-answer-card__actions">
+          <button
+            type="button"
+            class="wrong-answer-btn wrong-answer-btn--leave"
+            (click)="abandonWithHonor()"
+          >
+            Abandonar con honor
+          </button>
+
+          <button
+            type="button"
+            class="wrong-answer-btn wrong-answer-btn--continue"
+            (click)="acceptBarbablancaChance()"
+          >
+            Aceptar otra oportunidad
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+    @if (showBarbablancaGift) {
+    <div class="barbablanca-gift-overlay">
+      <div class="barbablanca-gift-card">
+        <span class="barbablanca-gift-card__badge">🧙‍♂️ Barbablanca aparece</span>
+
+        <h2>Has resistido a Barbanegra</h2>
+
+        <p>
+          Tras superar la décima prueba, Barbablanca te concede una ayuda extra.
+          Elige un comodín para afrontar el último tramo de la montaña.
+        </p>
+
+        <div class="barbablanca-gift-options">
+          @for (wildcard of wildcards; track wildcard.id) {
+            <button
+              type="button"
+              class="gift-wildcard"
+              (click)="chooseExtraWildcard(wildcard.id)"
+            >
+              <span class="gift-wildcard__icon">{{ wildcard.icon }}</span>
+
+              <span class="gift-wildcard__text">
+                <strong>{{ wildcard.name }}</strong>
+                <small>{{ wildcard.description }}</small>
+              </span>
+
+              <span class="gift-wildcard__quantity">
+                x{{ wildcard.quantity }}
+              </span>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
 </section>
