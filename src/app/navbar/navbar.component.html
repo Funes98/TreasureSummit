@@ -1,0 +1,26 @@
+<nav class="navbar">
+  <div class="navbar__container">
+    <a class="navbar__brand" routerLink="/">
+      <span class="navbar__icon">🏴‍☠️</span>
+      <span class="navbar__title">Treasure Summit</span>
+    </a>
+
+    <div class="navbar__links">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Inicio
+      </a>
+
+      <a routerLink="/ranking" routerLinkActive="active">
+        Ranking
+      </a>
+
+      <a routerLink="/contact" routerLinkActive="active">
+        Contacto
+      </a>
+    </div>
+  </div>
+</nav>

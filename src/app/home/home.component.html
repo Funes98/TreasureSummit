@@ -1,0 +1,113 @@
+<section class="home">
+  <div class="home__container">
+    <div class="home__content">
+      <h1>Demuestra tu sabiduría y alcanza el tesoro</h1>
+
+      <p class="home__intro">
+        En lo más alto de la montaña aguarda un tesoro legendario, pero solo los
+        verdaderamente dignos podrán llegar hasta él. Para avanzar, deberás superar
+        las preguntas del pirata Barbablanca, la Brújula Dorada, un antiguo sabio pirata
+        que pondrá a prueba tu conocimiento, tu calma y tu valor.
+      </p>
+
+      <p class="home__quote">
+        “Cada respuesta correcta te acercará a la cumbre. Pero un solo error podría hacerte
+        perderlo todo.”
+      </p>
+
+      @if (!showNameForm) {
+        <div class="home__actions">
+          <button class="btn btn--primary" type="button" (click)="openNameForm()">
+            Comenzar aventura
+          </button>
+
+          <button class="btn btn--secondary" type="button" (click)="toggleRules()">
+            Reglas del juego
+          </button>
+        </div>
+      }
+
+      @if (showNameForm) {
+        <form class="player-form" (ngSubmit)="startGame()">
+          <button class="back-button" type="button" (click)="goBack()">
+            ← Volver
+          </button>
+
+          <label for="playerName">Antes de subir, dime tu nombre</label>
+
+          <input
+            id="playerName"
+            name="playerName"
+            type="text"
+            [(ngModel)]="playerName"
+            placeholder="Introduce tu nombre"
+            minlength="3"
+            maxlength="10"
+            autocomplete="off"
+          />
+
+          <button class="btn btn--primary" type="submit">
+            Empezar juego
+          </button>
+        </form>
+      }
+
+      @if (showRules) {
+        <div class="rules-card">
+            <h2>Reglas del juego</h2>
+
+            <p>
+            El ascenso hacia el tesoro está formado por <strong>15 preguntas</strong>,
+            divididas en diferentes niveles de dificultad. Cada respuesta correcta
+            te hará avanzar por la montaña y sumará puntos a tu marcador.
+            </p>
+
+            <ul>
+            <li><strong>4 preguntas fáciles:</strong> 100 puntos cada una.</li>
+            <li><strong>4 preguntas intermedias:</strong> 200 puntos cada una.</li>
+            <li><strong>4 preguntas difíciles:</strong> 400 puntos cada una.</li>
+            <li><strong>3 preguntas muy difíciles:</strong> 600 puntos cada una.</li>
+            </ul>
+
+            <p>
+            Si respondes correctamente en menos de <strong>30 segundos</strong>,
+            la puntuación de esa pregunta se multiplicará por <strong>1.5</strong>.
+            </p>
+
+            <p>
+            Durante la partida podrás usar comodines para recibir ayuda, pero cada
+            comodín utilizado reducirá un <strong>25%</strong> la puntuación que puedes
+            conseguir en esa pregunta.
+            </p>
+
+            <p>
+            A partir de la <strong>pregunta 8</strong>, podrás decidir si quieres
+            seguir arriesgando o plantarte. Si te plantas, conservarás tu puntuación
+            acumulada y tu avance quedará registrado en el ranking.
+            </p>
+
+            <p>
+            Si fallas una pregunta cuando ya estás en el nivel difícil, Barbablanca
+            podrá concederte una segunda oportunidad. Pero el precio será alto:
+            perderás todos tus comodines y se restará la mitad de la puntuación
+            que lleves acumulada.
+            </p>
+
+            <p>
+            En el ranking se mostrará tu puntuación y el tramo del camino que has
+            conseguido alcanzar. Solo quienes sepan cuándo arriesgar, cuándo usar sus
+            ayudas y cuándo plantarse podrán acercarse al tesoro legendario.
+            </p>
+        </div>
+        }
+    </div>
+
+    <div class="home__image-wrapper">
+      <img
+        src="/BarbaBlanca.png"
+        alt="Barbablanca, el sabio pirata de Treasure Summit"
+        class="home__image"
+      />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,158 @@
+<div class="stage stage--hard">
+  <div class="stage__mist"></div>
+
+  <div class="stage__container">
+    <header class="stage__header">
+      <div class="stage__welcome">
+        <span class="stage__zone">🪨 Sendero del precipicio</span>
+
+        <h2>{{ playerName }}, la cima ya se deja ver</h2>
+
+        <p>
+          El ascenso se vuelve peligroso. La montaña se estrecha, el viento sopla
+          con fuerza y un paso en falso podría hacerte caer al vacío.
+        </p>
+      </div>
+
+      <div class="stage__hud">
+        <div class="stage__stats">
+          <div class="stat-card">
+            <span>Pregunta</span>
+            <strong>{{ questionNumber }}/{{ totalQuestions }}</strong>
+          </div>
+
+          <div class="timer-card" [class.timer-card--danger]="timeLeft <= 10">
+            <span>Tiempo</span>
+            <strong>{{ timeLeft }}s</strong>
+          </div>
+
+          <div class="stat-card">
+            <span>Puntos</span>
+            <strong>{{ totalScore }}</strong>
+          </div>
+        </div>
+
+        <div class="wildcards-mini">
+          @for (wildcard of wildcards; track wildcard.id) {
+            <button
+              type="button"
+              class="wildcard-mini"
+              [class.wildcard-mini--used]="wildcard.used"
+              [disabled]="wildcard.used"
+              (click)="useWildcard(wildcard.id)"
+              [title]="wildcard.description"
+            >
+              <span class="wildcard-mini__icon">{{ wildcard.icon }}</span>
+              <span class="wildcard-mini__name">{{ wildcard.name }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    </header>
+
+    <section class="cliff-panel">
+      <div class="cliff-panel__scene">
+        <div class="scene__path"></div>
+        <div class="scene__climber">🧍</div>
+        <div class="scene__cliff">🪨</div>
+        <div class="scene__peak">⛰️</div>
+        <div class="scene__treasure">💰</div>
+      </div>
+
+      <div class="cliff-panel__info">
+        <span>Tramo peligroso</span>
+
+        <div class="progress-bar">
+          <div
+            class="progress-bar__fill"
+            [style.width.%]="(questionNumber / totalQuestions) * 100"
+          ></div>
+        </div>
+
+        <small>
+          Ya puedes ver la cima, pero ahora el camino se vuelve mucho más arriesgado.
+        </small>
+      </div>
+    </section>
+
+    <main class="question-card">
+      <div class="question-card__top">
+        <span class="question-card__tier">Nivel difícil · 400 pts</span>
+
+        <span class="question-card__bonus">
+          Bonus x1.5 si respondes antes de que acabe el tiempo
+        </span>
+      </div>
+
+      <h1>{{ question.text }}</h1>
+
+      <div class="answers-grid">
+        @for (option of question.options; track option) {
+          <button
+            type="button"
+            class="answer-button"
+            (click)="selectAnswer(option)"
+          >
+            {{ option }}
+          </button>
+        }
+      </div>
+
+      @if (canRetire) {
+        <button class="retire-button" type="button" (click)="retireGame()">
+          Plantarse y guardar puntos
+        </button>
+      }
+    </main>
+  </div>
+
+  @if (showBlackbeardTemptation) {
+    <div class="temptation-overlay">
+        <div class="temptation-card">
+        <div class="temptation-card__image-wrapper">
+            <img
+            src="/Barbanegra1.png"
+            alt="Barbanegra ofreciendo una bolsa de oro"
+            class="temptation-card__image"
+            />
+        </div>
+
+        <div class="temptation-card__content">
+            <span class="temptation-card__badge">☠️ Barbanegra aparece</span>
+
+            <h3>“No sigas... toma este oro y abandona la montaña.”</h3>
+
+            <p>
+            Entre la niebla del precipicio, Barbanegra aparece con una pequeña
+            bolsa de oro en la mano. Te ofrece marcharte ahora, conservar tu
+            puntuación y olvidarte del tesoro de la cima.
+            </p>
+
+            <p>
+            A lo lejos, el verdadero tesoro sigue brillando en lo más alto de la
+            montaña. Puedes aceptar su trato y guardar tus puntos, o rechazarlo y
+            continuar el ascenso.
+            </p>
+
+            <div class="temptation-card__actions">
+            <button
+                type="button"
+                class="temptation-btn temptation-btn--leave"
+                (click)="acceptDeal()"
+            >
+                Aceptar el oro y guardar puntos
+            </button>
+
+            <button
+                type="button"
+                class="temptation-btn temptation-btn--continue"
+                (click)="continueClimbing()"
+            >
+                Rechazar y seguir subiendo
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+    }
+</div>

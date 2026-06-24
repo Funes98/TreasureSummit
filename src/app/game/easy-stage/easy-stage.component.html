@@ -1,0 +1,112 @@
+<div class="stage stage--easy">
+  <div class="stage__sea-glow"></div>
+
+  <div class="stage__container">
+    <header class="stage__header">
+    <div class="stage__welcome">
+      <span class="stage__zone">🌴 Orilla del comienzo</span>
+
+      <h2>{{ playerName }}, llegas a la isla</h2>
+
+      <p>
+        Barbablanca observa tus primeros pasos. Demuestra que eres digno de subir
+        la montaña.
+      </p>
+    </div>
+
+    <div class="stage__hud">
+      <div class="stage__stats">
+        <div class="stat-card">
+          <span>Pregunta</span>
+          <strong>{{ questionNumber }}/{{ totalQuestions }}</strong>
+        </div>
+
+        <div class="timer-card" [class.timer-card--danger]="timeLeft <= 10">
+          <span>Bonus</span>
+          <strong>{{ timeLeft }}s</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Puntos</span>
+          <strong>{{ totalScore }}</strong>
+        </div>
+      </div>
+
+      <div class="wildcards-mini">
+      @for (wildcard of wildcards; track wildcard.id) {
+        <button
+          type="button"
+          class="wildcard-mini"
+          [class.wildcard-mini--used]="wildcard.used"
+          [disabled]="wildcard.used"
+          (click)="useWildcard(wildcard.id)"
+          [title]="wildcard.description"
+        >
+          <span class="wildcard-mini__icon">{{ wildcard.icon }}</span>
+          <span class="wildcard-mini__name">{{ wildcard.name }}</span>
+        </button>
+      }
+    </div>
+    </div>
+  </header>
+
+    <section class="island-panel">
+      <div class="island-panel__scene">
+        <div class="scene__boat">⛵</div>
+        <div class="scene__waves"></div>
+        <div class="scene__island">
+          <span class="scene__palm">🌴</span>
+          <span class="scene__mountain">⛰️</span>
+          <span class="scene__chest">💰</span>
+        </div>
+      </div>
+
+      <div class="island-panel__info">
+        <span>Progreso del ascenso</span>
+
+        <div class="progress-bar">
+          <div
+            class="progress-bar__fill"
+            [style.width.%]="(questionNumber / totalQuestions) * 100"
+          ></div>
+        </div>
+
+        <small>
+          Cada respuesta correcta te acerca un poco más a la montaña del tesoro.
+        </small>
+      </div>
+    </section>
+
+
+
+    <main class="question-card">
+      <div class="question-card__top">
+        <span class="question-card__tier">Nivel fácil · 100 pts</span>
+
+        <span class="question-card__bonus">
+          Bonus x1.5 si respondes antes de que acabe el tiempo
+        </span>
+      </div>
+
+      <h1>{{ question.text }}</h1>
+
+      <div class="answers-grid">
+        @for (option of question.options; track option) {
+          <button
+            type="button"
+            class="answer-button"
+            (click)="selectAnswer(option)"
+          >
+            {{ option }}
+          </button>
+        }
+      </div>
+
+      @if (canRetire) {
+        <button class="retire-button" type="button" (click)="retireGame()">
+          Plantarse y guardar puntos
+        </button>
+      }
+    </main>
+  </div>
+</div>

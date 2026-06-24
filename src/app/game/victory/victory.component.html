@@ -1,0 +1,60 @@
+<section class="victory">
+  <div class="victory__glow"></div>
+
+  <div class="victory__container">
+    <div class="treasure-card">
+      <span class="victory__badge">🏆 Cumbre alcanzada</span>
+
+      <h1>{{ playerName }}, has llegado al tesoro</h1>
+
+      <p class="victory__intro">
+        Tras superar la última pregunta, el cofre se abre ante ti. Durante un instante,
+        el oro brilla como si toda la montaña estuviera hecha de luz.
+      </p>
+
+      <div class="treasure-scene">
+        <div class="treasure-scene__chest">💰</div>
+        <div class="treasure-scene__illusion"></div>
+        <div class="treasure-scene__note">📜</div>
+      </div>
+
+      @if (!showNote) {
+        <p class="victory__twist">
+          Pero al acercarte, el brillo desaparece. El oro no era real. Todo era una ilusión.
+          En el fondo del cofre solo queda una vieja nota.
+        </p>
+
+        <button class="victory-btn victory-btn--primary" type="button" (click)="openNote()">
+          Leer la nota
+        </button>
+      }
+
+      @if (showNote) {
+        <div class="note-card">
+          <span class="note-card__title">Nota de Barbablanca</span>
+
+          <p>
+            “Si estás leyendo esto, has demostrado algo más valioso que la codicia:
+            sabiduría, paciencia y valor.”
+          </p>
+
+          <p>
+            “El verdadero tesoro nunca fue el oro, sino haber llegado hasta aquí
+            sin rendirte ante el miedo, la duda ni la tentación.”
+          </p>
+
+          <p>
+            “Ahora tu nombre quedará escrito entre quienes fueron dignos de alcanzar
+            la cima de Treasure Summit.”
+          </p>
+        </div>
+
+        <div class="victory__actions">
+          <a routerLink="/ranking" class="victory-btn victory-btn--primary">
+            Ver ranking
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</section>

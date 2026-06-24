@@ -1,0 +1,75 @@
+<section class="game">
+  @switch (currentQuestion.tier) {
+    @case ('easy') {
+      <app-easy-stage
+        [question]="currentQuestion"
+        [questionNumber]="questionNumber"
+        [totalQuestions]="questions.length"
+        [totalScore]="totalScore"
+        [playerName]="playerName"
+        [timeLeft]="timeLeft"
+        [wildcards]="wildcards"
+        [canRetire]="canRetire"
+        (answerSelected)="answerQuestion($event)"
+        (wildcardSelected)="useWildcard($event)"
+        (retire)="retireGame()"
+      />
+    }
+    @case ('medium') {
+    <app-medium-stage
+      [question]="currentQuestion"
+      [questionNumber]="questionNumber"
+      [totalQuestions]="questions.length"
+      [totalScore]="totalScore"
+      [playerName]="playerName"
+      [timeLeft]="timeLeft"
+      [wildcards]="wildcards"
+      [canRetire]="canRetire"
+      (answerSelected)="answerQuestion($event)"
+      (wildcardSelected)="useWildcard($event)"
+      (retire)="retireGame()"
+    />
+  }
+
+  @case ('hard') {
+  <app-hard-stage
+    [question]="currentQuestion"
+    [questionNumber]="questionNumber"
+    [totalQuestions]="questions.length"
+    [totalScore]="totalScore"
+    [playerName]="playerName"
+    [timeLeft]="timeLeft"
+    [wildcards]="wildcards"
+    [canRetire]="canRetire"
+    [showBlackbeardTemptation]="showBlackbeardTemptation"
+    (answerSelected)="answerQuestion($event)"
+    (wildcardSelected)="useWildcard($event)"
+    (retire)="retireGame()"
+    (continueJourney)="continueAfterBlackbeard()"
+    (acceptBlackbeardDeal)="retireAfterBlackbeard()"
+  />
+}
+
+  @case ('very-hard') {
+    <app-very-hard-stage
+      [question]="currentQuestion"
+      [questionNumber]="questionNumber"
+      [totalQuestions]="questions.length"
+      [totalScore]="totalScore"
+      [playerName]="playerName"
+      [timeLeft]="timeLeft"
+      [wildcards]="wildcards"
+      [canRetire]="canRetire"
+      [showFinalThreat]="showFinalBlackbeardThreat"
+      (answerSelected)="answerQuestion($event)"
+      (wildcardSelected)="useWildcard($event)"
+      (retire)="retireGame()"
+      (continueFinalChallenge)="continueAfterFinalThreat()"
+      (surrenderFinalChallenge)="surrenderAfterFinalThreat()"
+    />
+  }
+
+
+
+  }
+</section>

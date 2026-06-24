@@ -1,0 +1,309 @@
+.victory {
+  position: relative;
+  min-height: calc(100vh - 72px);
+  padding: 2rem 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  color: #fff6df;
+
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 209, 102, 0.28), transparent 28%),
+    linear-gradient(180deg, #20130a 0%, #120804 55%, #070302 100%);
+}
+
+.victory::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 209, 102, 0.14), transparent 34%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 0,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 18px
+    );
+
+  pointer-events: none;
+}
+
+.victory__glow {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+
+  background: rgba(255, 209, 102, 0.25);
+  filter: blur(90px);
+  border-radius: 50%;
+}
+
+.victory__container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 760px;
+}
+
+.treasure-card {
+  padding: 2rem;
+
+  border-radius: 30px;
+  background: rgba(12, 7, 3, 0.82);
+  border: 1px solid rgba(255, 209, 102, 0.3);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+
+  text-align: center;
+}
+
+.victory__badge {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  padding: 0.42rem 0.85rem;
+
+  border-radius: 999px;
+  background: rgba(255, 209, 102, 0.13);
+  border: 1px solid rgba(255, 209, 102, 0.28);
+
+  color: #ffd166;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.treasure-card h1 {
+  margin: 0;
+
+  color: #ffd166;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1;
+  font-weight: 950;
+}
+
+.victory__intro,
+.victory__twist {
+  max-width: 620px;
+  margin: 1rem auto 0;
+
+  color: rgba(255, 246, 223, 0.84);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.treasure-scene {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 210px;
+  margin: 1.5rem auto;
+
+  border-radius: 28px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 209, 102, 0.35), transparent 30%),
+    linear-gradient(180deg, rgba(65, 35, 12, 0.8), rgba(16, 8, 3, 0.9));
+  border: 1px solid rgba(255, 209, 102, 0.24);
+}
+
+.treasure-scene__chest {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+
+  transform: translate(-50%, -50%);
+  font-size: 5.5rem;
+
+  animation: treasureFade 2.8s ease-in-out infinite;
+}
+
+.treasure-scene__illusion {
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 209, 102, 0.22), transparent 35%),
+    radial-gradient(circle at 45% 45%, rgba(255, 255, 255, 0.12), transparent 24%);
+
+  animation: illusionPulse 2.8s ease-in-out infinite;
+}
+
+.treasure-scene__note {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+
+  transform: translateX(-50%);
+  font-size: 2.6rem;
+
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
+}
+
+.note-card {
+  margin: 1.3rem auto 0;
+  max-width: 620px;
+  padding: 1.2rem;
+
+  border-radius: 22px;
+  background: rgba(255, 246, 223, 0.08);
+  border: 1px solid rgba(255, 209, 102, 0.25);
+
+  text-align: left;
+}
+
+.note-card__title {
+  display: block;
+  margin-bottom: 0.8rem;
+
+  color: #ffd166;
+  font-weight: 950;
+}
+
+.note-card p {
+  margin: 0 0 0.85rem;
+  color: #fff6df;
+  line-height: 1.55;
+}
+
+.note-card p:last-child {
+  margin-bottom: 0;
+}
+
+.victory__actions {
+  margin-top: 1.3rem;
+
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.victory-btn {
+  border: 0;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 170px;
+  min-height: 48px;
+  padding: 0.8rem 1.1rem;
+
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 950;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.victory-btn:hover {
+  transform: translateY(-2px);
+}
+
+.victory-btn--primary {
+  background: #ffd166;
+  color: #1a1005;
+}
+
+.victory-btn--secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffd166;
+  border: 1px solid rgba(255, 209, 102, 0.28);
+}
+
+@keyframes treasureFade {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  50% {
+    opacity: 0.35;
+    filter: blur(2px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes illusionPulse {
+  0% {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 0.25;
+  }
+
+  100% {
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 600px) {
+  .victory {
+    min-height: calc(100vh - 118px);
+    padding: 1rem 0.75rem;
+    align-items: flex-start;
+  }
+
+  .treasure-card {
+    padding: 1rem;
+    border-radius: 22px;
+  }
+
+  .treasure-card h1 {
+    font-size: 2rem;
+  }
+
+  .victory__intro,
+  .victory__twist {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .treasure-scene {
+    height: 160px;
+    margin: 1rem auto;
+    border-radius: 20px;
+  }
+
+  .treasure-scene__chest {
+    font-size: 4rem;
+  }
+
+  .treasure-scene__note {
+    bottom: 18px;
+    font-size: 2rem;
+  }
+
+  .note-card {
+    padding: 0.9rem;
+    border-radius: 18px;
+  }
+
+  .note-card p {
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .victory__actions {
+    flex-direction: column;
+  }
+
+  .victory-btn {
+    width: 100%;
+    min-height: 46px;
+    font-size: 0.9rem;
+  }
+}

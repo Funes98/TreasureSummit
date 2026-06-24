@@ -1,0 +1,158 @@
+<div class="stage stage--very-hard">
+  <div class="stage__summit-glow"></div>
+
+  <div class="stage__container">
+    <header class="stage__header">
+      <div class="stage__welcome">
+        <span class="stage__zone">🏔️ Cumbre del tesoro</span>
+
+        <h2>{{ playerName }}, el tesoro está al alcance</h2>
+
+        <p>
+          Solo quedan los últimos pasos. La cima brilla ante ti, pero la montaña
+          no dejará pasar a quien no sea realmente digno.
+        </p>
+      </div>
+
+      <div class="stage__hud">
+        <div class="stage__stats">
+          <div class="stat-card">
+            <span>Pregunta</span>
+            <strong>{{ questionNumber }}/{{ totalQuestions }}</strong>
+          </div>
+
+          <div class="timer-card" [class.timer-card--danger]="timeLeft <= 10">
+            <span>Tiempo</span>
+            <strong>{{ timeLeft }}s</strong>
+          </div>
+
+          <div class="stat-card">
+            <span>Puntos</span>
+            <strong>{{ totalScore }}</strong>
+          </div>
+        </div>
+
+        <div class="wildcards-mini">
+          @for (wildcard of wildcards; track wildcard.id) {
+            <button
+              type="button"
+              class="wildcard-mini"
+              [class.wildcard-mini--used]="wildcard.used"
+              [disabled]="wildcard.used"
+              (click)="useWildcard(wildcard.id)"
+              [title]="wildcard.description"
+            >
+              <span class="wildcard-mini__icon">{{ wildcard.icon }}</span>
+              <span class="wildcard-mini__name">{{ wildcard.name }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    </header>
+
+    <section class="summit-panel">
+      <div class="summit-panel__scene">
+        <div class="scene__clouds"></div>
+        <div class="scene__path"></div>
+        <div class="scene__player">🧍</div>
+        <div class="scene__peak">🏔️</div>
+        <div class="scene__treasure">💰</div>
+      </div>
+
+      <div class="summit-panel__info">
+        <span>Último tramo</span>
+
+        <div class="progress-bar">
+          <div
+            class="progress-bar__fill"
+            [style.width.%]="(questionNumber / totalQuestions) * 100"
+          ></div>
+        </div>
+
+        <small>
+          Estás a un paso del tesoro. Cada decisión puede convertirte en leyenda
+          o hacerte perderlo todo.
+        </small>
+      </div>
+    </section>
+
+    <main class="question-card">
+      <div class="question-card__top">
+        <span class="question-card__tier">Nivel muy difícil · 600 pts</span>
+
+        <span class="question-card__bonus">
+          Bonus x1.5 si respondes antes de que acabe el tiempo
+        </span>
+      </div>
+
+      <h1>{{ question.text }}</h1>
+
+      <div class="answers-grid">
+        @for (option of question.options; track option) {
+          <button
+            type="button"
+            class="answer-button"
+            (click)="selectAnswer(option)"
+          >
+            {{ option }}
+          </button>
+        }
+      </div>
+
+      @if (canRetire) {
+        <button class="retire-button" type="button" (click)="retireGame()">
+          Plantarse y guardar puntos
+        </button>
+      }
+    </main>
+  </div>
+
+  @if (showFinalThreat) {
+    <div class="final-threat-overlay">
+      <div class="final-threat-card">
+        <div class="final-threat-card__image-wrapper">
+          <img
+            src="/Barbanegra2.png"
+            alt="Barbanegra apuntando con una pistola en la cima"
+            class="final-threat-card__image"
+          />
+        </div>
+
+        <div class="final-threat-card__content">
+          <span class="final-threat-card__badge">☠️ Barbanegra, desesperado</span>
+
+          <h3>“Detente ahora... o lo perderás todo.”</h3>
+
+          <p>
+            A pocos pasos del tesoro, Barbanegra aparece entre la niebla
+            apuntándote con su pistola. Ya no intenta comprarte: ahora quiere
+            frenarte antes de que alcances la cima.
+          </p>
+
+          <p>
+            Puedes rendirte y guardar tu puntuación, o desafiarlo y continuar
+            hacia las preguntas finales.
+          </p>
+
+          <div class="final-threat-card__actions">
+            <button
+              type="button"
+              class="final-threat-btn final-threat-btn--leave"
+              (click)="surrender()"
+            >
+              Rendirse y guardar puntos
+            </button>
+
+            <button
+              type="button"
+              class="final-threat-btn final-threat-btn--continue"
+              (click)="continueClimbing()"
+            >
+              Seguir hasta el tesoro
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
