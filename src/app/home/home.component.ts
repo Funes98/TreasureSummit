@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RankingService } from '../services/ranking.service';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,10 @@ export class HomeComponent {
   showRules = false;
   playerName = '';
 
-  router:Router=inject(Router)
+  constructor(
+  private router: Router,
+  private rankingService: RankingService
+  ) {}
 
   showDuplicateNameWarning = false;
   
@@ -35,20 +39,29 @@ export class HomeComponent {
     this.showRules = !this.showRules;
   }
 
-  startGame(): void {
+  async startGame(): Promise<void> {
     const name = this.playerName.trim();
 
     if (!name) {
       return;
     }
 
-    if (this.nameExistsInRanking(name)) {
-      this.duplicatedName = name;
-      this.showDuplicateNameWarning = true;
-      return;
-    }
+    try {
+      const exists = await this.rankingService.nameExists(name);
 
-    this.beginGame(name);
+      if (exists) {
+        this.duplicatedName = name;
+        this.showDuplicateNameWarning = true;
+        return;
+      }
+
+      this.beginGame(name);
+    } catch (error) {
+      console.error('Error comprobando el nombre:', error);
+
+      // Si Supabase falla, dejamos jugar igualmente
+      this.beginGame(name);
+    }
   }
 
   confirmDuplicatedName(): void {
@@ -62,6 +75,11 @@ export class HomeComponent {
 
   private beginGame(name: string): void {
     localStorage.setItem('treasure_player_name', name);
+    localStorage.setItem('treasure_can_start_game', 'true');
+
+    localStorage.removeItem('treasure_last_result');
+    localStorage.removeItem('treasure_last_status');
+
     this.router.navigate(['/game']);
   }
 

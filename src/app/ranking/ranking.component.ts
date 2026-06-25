@@ -1,71 +1,72 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { RankingResult } from '../interfaces/ranking-result';
+import { RankingService } from '../services/ranking.service';
 
 @Component({
   selector: 'app-ranking',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './ranking.component.html',
   styleUrl: './ranking.component.css'
 })
-export class RankingComponent {
+export class RankingComponent implements OnInit {
   ranking: RankingResult[] = [];
 
   currentPage = 1;
   itemsPerPage = 10;
+  totalResults = 0;
+
+  loading = false;
+  errorMessage = '';
+
+  constructor(private rankingService: RankingService) {}
 
   ngOnInit(): void {
     this.loadRanking();
   }
 
-  loadRanking(): void {
-    const storedRanking = localStorage.getItem('treasure_ranking');
+  async loadRanking(): Promise<void> {
+    this.loading = true;
+    this.errorMessage = '';
 
-    if (!storedRanking) {
-      this.ranking = [];
-      return;
+    try {
+      this.totalResults = await this.rankingService.getRankingCount();
+      this.ranking = await this.rankingService.getRanking(
+        this.currentPage,
+        this.itemsPerPage
+      );
+    } catch (error) {
+      console.error(error);
+      this.errorMessage = 'No se pudo cargar el ranking.';
+    } finally {
+      this.loading = false;
     }
-
-    this.ranking = JSON.parse(storedRanking)
-      .sort((a: RankingResult, b: RankingResult) => b.score - a.score);
   }
 
   get totalPages(): number {
-    return Math.ceil(this.ranking.length / this.itemsPerPage);
+    return Math.max(1, Math.ceil(this.totalResults / this.itemsPerPage));
   }
 
   get paginatedRanking(): RankingResult[] {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-
-    return this.ranking.slice(start, end);
+    return this.ranking;
   }
 
   get hasRanking(): boolean {
     return this.ranking.length > 0;
   }
 
-  nextPage(): void {
+  async nextPage(): Promise<void> {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      await this.loadRanking();
     }
   }
 
-  previousPage(): void {
+  async previousPage(): Promise<void> {
     if (this.currentPage > 1) {
       this.currentPage--;
+      await this.loadRanking();
     }
-  }
-
-  clearRanking(): void {
-    const confirmClear = confirm('¿Seguro que quieres borrar el ranking?');
-
-    if (!confirmClear) {
-      return;
-    }
-
-    localStorage.removeItem('treasure_ranking');
-    this.ranking = [];
-    this.currentPage = 1;
   }
 
   getPosition(index: number): number {
@@ -87,5 +88,4 @@ export class RankingComponent {
 
     return new Date(date).toLocaleDateString('es-ES');
   }
-
 }

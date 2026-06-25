@@ -6,6 +6,8 @@ import { EasyStageComponent } from './easy-stage/easy-stage.component';
 import { MediumStageComponent } from './medium-stage/medium-stage.component';
 import { HardStageComponent } from './hard-stage/hard-stage.component';
 import { VeryHardStageComponent } from './very-hard-stage/very-hard-stage.component';
+import { QUESTION_BANK } from '../data/question-bank';
+import { RankingService } from '../services/ranking.service';
 
 @Component({
   selector: 'app-game',
@@ -38,6 +40,12 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
   disabledOptions: string[] = [];
   usedWildcardIdsThisQuestion: string[] = [];
 
+  questionBank: Question[] = QUESTION_BANK;
+
+  questions: Question[] = [];
+
+  usedQuestionIdsThisRun: number[] = [];
+
   wildcards: Wildcard[] = [
     {
       id: 'time',
@@ -62,165 +70,17 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
     }
   ];
 
-  questions: Question[] = [
-    {
-    "id": 1,
-    "text": "¿Cuál es el océano más grande del mundo?",
-    "options": ["Atlántico", "Índico", "Pacífico", "Ártico"],
-    "correctAnswer": "Pacífico",
-    "tier": "easy",
-    "points": 100
-  },
-  {
-    "id": 2,
-    "text": "¿Cuántos días tiene una semana?",
-    "options": ["5", "6", "7", "8"],
-    "correctAnswer": "7",
-    "tier": "easy",
-    "points": 100
-  },
-  {
-    "id": 3,
-    "text": "¿Qué animal es conocido como el rey de la selva?",
-    "options": ["Tigre", "León", "Elefante", "Lobo"],
-    "correctAnswer": "León",
-    "tier": "easy",
-    "points": 100
-  },
-  {
-    "id": 4,
-    "text": "¿Cuánto es 5 x 5?",
-    "options": ["10", "20", "25", "30"],
-    "correctAnswer": "25",
-    "tier": "easy",
-    "points": 100
-  },
-  {
-    "id": 5,
-    "text": "¿Qué planeta es conocido como el planeta rojo?",
-    "options": ["Venus", "Marte", "Júpiter", "Saturno"],
-    "correctAnswer": "Marte",
-    "tier": "medium",
-    "points": 200
-  },
-  {
-    "id": 6,
-    "text": "¿Quién escribió Don Quijote de la Mancha?",
-    "options": [
-      "Miguel de Cervantes",
-      "Federico García Lorca",
-      "Francisco de Quevedo",
-      "Lope de Vega"
-    ],
-    "correctAnswer": "Miguel de Cervantes",
-    "tier": "medium",
-    "points": 200
-  },
-  {
-    "id": 7,
-    "text": "¿Cuál es la capital de Italia?",
-    "options": ["Milán", "Roma", "Nápoles", "Venecia"],
-    "correctAnswer": "Roma",
-    "tier": "medium",
-    "points": 200
-  },
-  {
-    "id": 8,
-    "text": "¿Qué lenguaje se usa principalmente en Angular?",
-    "options": ["Java", "TypeScript", "PHP", "Python"],
-    "correctAnswer": "TypeScript",
-    "tier": "medium",
-    "points": 200
-  },
-  {
-    "id": 9,
-    "text": "¿Qué significan las siglas HTTP?",
-    "options": [
-      "HyperText Transfer Protocol",
-      "High Transfer Text Program",
-      "Host Transfer Type Protocol",
-      "Hyperlink Text Tool Protocol"
-    ],
-    "correctAnswer": "HyperText Transfer Protocol",
-    "tier": "hard",
-    "points": 400
-  },
-  {
-    "id": 10,
-    "text": "¿Cuál de estas bases de datos utiliza principalmente SQL?",
-    "options": ["MongoDB", "MySQL", "Redis", "Firebase Storage"],
-    "correctAnswer": "MySQL",
-    "tier": "hard",
-    "points": 400
-  },
-  {
-    "id": 11,
-    "text": "¿Qué comando se usa para generar el build de producción en Angular?",
-    "options": ["ng serve", "ng start", "ng build", "ng generate"],
-    "correctAnswer": "ng build",
-    "tier": "hard",
-    "points": 400
-  },
-  {
-    "id": 12,
-    "text": "¿Qué servicio de Angular se usa habitualmente para hacer peticiones HTTP?",
-    "options": ["Router", "HttpClient", "FormBuilder", "ActivatedRoute"],
-    "correctAnswer": "HttpClient",
-    "tier": "hard",
-    "points": 400
-  },
-  {
-    "id": 13,
-    "text": "¿Qué patrón permite a Angular proporcionar servicios a componentes sin crearlos manualmente?",
-    "options": [
-      "Dependency Injection",
-      "DOM Rendering",
-      "Two Way Routing",
-      "Lazy Styling"
-    ],
-    "correctAnswer": "Dependency Injection",
-    "tier": "very-hard",
-    "points": 600
-  },
-  {
-    "id": 14,
-    "text": "En Angular standalone, ¿qué archivo suele contener la configuración principal de rutas?",
-    "options": [
-      "app.routes.ts",
-      "main.css",
-      "index.service.ts",
-      "routes.html"
-    ],
-    "correctAnswer": "app.routes.ts",
-    "tier": "very-hard",
-    "points": 600
-  },
-  {
-    "id": 15,
-    "text": "¿Qué operador de RxJS se utiliza para transformar los valores emitidos por un Observable?",
-    "options": ["map", "push", "render", "foreach"],
-    "correctAnswer": "map",
-    "tier": "very-hard",
-    "points": 600
-  }
-  ];
-
-  constructor(private router: Router) {}
+  constructor(private router: Router,private rankingService: RankingService) {}
 
   ngOnInit(): void {
     this.startQuestionTimer();
+    this.playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
+    this.validateQuestionBank();
+    this.startNewRun();
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
-  }
-
-  get currentQuestion(): Question {
-    return this.questions[this.currentQuestionIndex];
-  }
-
-  get questionNumber(): number {
-    return this.currentQuestionIndex + 1;
   }
 
   get canRetire(): boolean {
@@ -263,6 +123,10 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
       return;
     }
 
+    if (wildcardId === 'change' && !this.hasChangeQuestionAvailable()) {
+      return;
+    }
+
     wildcard.quantity--;
     this.usedWildcardIdsThisQuestion.push(wildcardId);
     this.wildcardUsedThisQuestion = true;
@@ -280,9 +144,52 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
     }
 
     if (wildcardId === 'change') {
-      console.log('Comodín cambio usado');
+      this.changeCurrentQuestion();
     }
   }
+
+  hasChangeQuestionAvailable(): boolean {
+  const currentTier = this.currentQuestion.tier;
+
+  return this.questionBank.some(question => {
+    return question.tier === currentTier &&
+      !this.usedQuestionIdsThisRun.includes(question.id);
+  });
+}
+
+  changeCurrentQuestion(): void {
+    const currentTier = this.currentQuestion.tier;
+
+    const availableQuestions = this.questionBank.filter(question => {
+      return question.tier === currentTier &&
+        !this.usedQuestionIdsThisRun.includes(question.id);
+    });
+
+    if (availableQuestions.length === 0) {
+      return;
+    }
+
+    const randomQuestion =
+      availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+
+    this.usedQuestionIdsThisRun.push(randomQuestion.id);
+
+    this.questions[this.currentQuestionIndex] = {
+      ...randomQuestion,
+      options: [...randomQuestion.options]
+    };
+
+    this.disabledOptions = [];
+  }
+
+  get currentQuestion(): Question {
+    return this.questions[this.currentQuestionIndex];
+  }
+
+  get questionNumber(): number {
+    return this.currentQuestionIndex + 1;
+  }
+
   applyFiftyFifty(): void {
   const question = this.currentQuestion;
 
@@ -342,9 +249,60 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
     this.prepareNewQuestion();
   }
 
+  startNewRun(): void {
+  const easyQuestions = this.pickRandomQuestionsByTier('easy', 4);
+  const mediumQuestions = this.pickRandomQuestionsByTier('medium', 4);
+  const hardQuestions = this.pickRandomQuestionsByTier('hard', 4);
+  const veryHardQuestions = this.pickRandomQuestionsByTier('very-hard', 3);
 
+  this.questions = [
+    ...easyQuestions,
+    ...mediumQuestions,
+    ...hardQuestions,
+    ...veryHardQuestions
+  ];
 
+  this.usedQuestionIdsThisRun = this.questions.map(question => question.id);
 
+  this.currentQuestionIndex = 0;
+  this.totalScore = 0;
+  this.correctAnswers = 0;
+
+  this.prepareNewQuestion();
+}
+
+  private pickRandomQuestionsByTier(
+    tier: Question['tier'],
+    amount: number
+  ): Question[] {
+    const questionsByTier = this.questionBank.filter(question => question.tier === tier);
+
+    if (questionsByTier.length < amount) {
+      throw new Error(`No hay suficientes preguntas para el tier ${tier}`);
+    }
+
+    return this.shuffleArray(questionsByTier)
+      .slice(0, amount)
+      .map(question => ({
+        ...question,
+        options: [...question.options]
+      }));
+  }
+
+  private shuffleArray<T>(array: T[]): T[] {
+    const shuffledArray = [...array];
+
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+
+      [shuffledArray[i], shuffledArray[randomIndex]] = [
+        shuffledArray[randomIndex],
+        shuffledArray[i]
+      ];
+    }
+
+    return shuffledArray;
+  }
 
 
   continueAfterFinalThreat(): void {
@@ -389,12 +347,27 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
 
   
 
-    prepareNewQuestion(): void {
-      this.wildcardUsedThisQuestion = false;
-      this.startQuestionTimer();
-      this.disabledOptions = [];
-      this.usedWildcardIdsThisQuestion = [];
-    }
+prepareNewQuestion(): void {
+    this.disabledOptions = [];
+    this.usedWildcardIdsThisQuestion = [];
+    this.wildcardUsedThisQuestion = false;
+
+    this.timeLeft = 30;
+
+    this.startQuestionTimer();
+  }
+
+  validateQuestionBank(): void {
+    const tiers: Question['tier'][] = ['easy', 'medium', 'hard', 'very-hard'];
+
+    tiers.forEach(tier => {
+      const total = this.questionBank.filter(question => question.tier === tier).length;
+
+      if (total < 20) {
+        console.warn(`Faltan preguntas en ${tier}. Tienes ${total}/20`);
+      }
+    });
+  }
 
   continueAfterBlackbeard(): void {
     this.showBlackbeardTemptation = false;
@@ -457,7 +430,7 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
     this.finishGame('retired');
   }
 
-  finishGame(status: 'completed' | 'failed' | 'retired'): void {
+  async finishGame(status: 'completed' | 'failed' | 'retired'): Promise<void> {
     this.stopTimer();
 
     const rankingItem = {
@@ -471,33 +444,27 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
       date: new Date().toISOString()
     };
 
-    const ranking = JSON.parse(localStorage.getItem('treasure_ranking') || '[]');
-
-    ranking.push(rankingItem);
-
-    ranking.sort((a: any, b: any) => b.score - a.score);
-
-    localStorage.setItem('treasure_ranking', JSON.stringify(ranking));
-
-    // Guardamos el último resultado para poder mostrarlo en derrota/victoria
+    localStorage.removeItem('treasure_can_start_game');
+    localStorage.setItem('treasure_last_status', status);
     localStorage.setItem('treasure_last_result', JSON.stringify(rankingItem));
 
+    try {
+      await this.rankingService.saveResult(rankingItem);
+    } catch (error) {
+      console.error('No se pudo guardar el resultado en Supabase:', error);
+    }
+
     if (status === 'completed') {
-      this.router.navigateByUrl('/victory');
+      this.router.navigate(['/victory']);
       return;
     }
 
     if (status === 'failed') {
-      this.router.navigateByUrl('/defeat');
+      this.router.navigate(['/defeat']);
       return;
     }
 
-    if (status === 'retired') {
-      this.router.navigateByUrl('/defeat');
-      return;
-    }
-
-    this.router.navigateByUrl('/ranking');
+    this.router.navigate(['/ranking']);
   }
 
 }

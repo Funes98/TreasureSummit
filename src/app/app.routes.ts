@@ -5,14 +5,17 @@ import { ContactComponent } from './contact/contact.component';
 import { GameComponent } from './game/game.component';
 import { VictoryComponent } from './game/victory/victory.component';
 import { DefeatComponent } from './game/defeat/defeat.component';
+import { gameGuard } from './guards/game.guard';
+import { victoryGuard } from './guards/victory.guard';
+import { defeatGuard } from './guards/defeat.guard';
 
 export const routes: Routes = [
     {path:'',component:HomeComponent},
     {path:'ranking',component:RankingComponent},
     {path:'contact',component:ContactComponent},
-    {path:'game',component:GameComponent},
-    {path:'victory',component:VictoryComponent},
-    {path:'defeat',component:DefeatComponent}
+    {path:'game',component:GameComponent,canActivate: [gameGuard]},
+    {path:'victory',component:VictoryComponent,canActivate: [victoryGuard]},
+    {path:'defeat',component:DefeatComponent,canActivate: [defeatGuard]}
 
     //Poner guardianes
 
