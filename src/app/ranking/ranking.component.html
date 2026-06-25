@@ -1,116 +1,127 @@
 <section class="ranking">
   <div class="ranking__glow"></div>
 
-  <div class="ranking__container">
-    <header class="ranking__header">
-      <span class="ranking__badge">🏴‍☠️ Salón de leyendas</span>
+  @if (loading) {
+  <div class="ranking-loading">
+    <div class="ranking-loading__spinner"></div>
 
-      <h1>Ranking de Treasure Summit</h1>
+    <h2>Cargando ranking...</h2>
 
-      <p>
-        Aquí se guardan los aventureros que intentaron alcanzar la cima.
-        Solo los más sabios lograrán conquistar el tesoro.
-      </p>
-    </header>
+    <p>
+      Buscando a los aventureros que dejaron su nombre en la montaña.
+    </p>
+  </div>
+} @else if (errorMessage) {
+  <div class="empty-ranking">
+    <div class="empty-ranking__icon">⚠️</div>
 
-    @if (!hasRanking) {
-      <div class="empty-ranking">
-        <div class="empty-ranking__icon">📜</div>
+    <h2>No se pudo cargar el ranking</h2>
 
-        <h2>Aún no hay aventureros en el ranking</h2>
+    <p>{{ errorMessage }}</p>
 
-        <p>
-          Completa una partida para dejar tu nombre escrito en la montaña.
-        </p>
+    <button
+      type="button"
+      class="ranking-btn ranking-btn--primary"
+      (click)="loadRanking()"
+    >
+      Reintentar
+    </button>
+  </div>
+} @else if (!hasRanking) {
+  <div class="empty-ranking">
+    <div class="empty-ranking__icon">📜</div>
 
-        <a routerLink="/" class="ranking-btn ranking-btn--primary">
-          Comenzar aventura
-        </a>
+    <h2>Aún no hay aventureros en el ranking</h2>
+
+    <p>
+      Completa una partida para dejar tu nombre escrito en la montaña.
+    </p>
+
+    <a routerLink="/" class="ranking-btn ranking-btn--primary">
+      Comenzar aventura
+    </a>
+  </div>
+} @else {
+  <div class="ranking-card">
+    <div class="ranking-card__top">
+      <div>
+        <h2>Mejores puntuaciones</h2>
+        <span>{{ totalResults }} resultados registrados</span>
       </div>
-    }
+    </div>
 
-    @if (hasRanking) {
-      <div class="ranking-card">
-        <div class="ranking-card__top">
-          <div>
-            <h2>Mejores puntuaciones</h2>
-            <span>{{ ranking.length }} resultados registrados</span>
+    <div class="ranking-list">
+      @for (result of paginatedRanking; track result.playerName + result.score + result.createdAt; let i = $index) {
+        <article
+          class="ranking-item"
+          [class.ranking-item--winner]="result.won"
+        >
+          <div class="ranking-item__position">
+            @if (getPosition(i) === 1) {
+              🥇
+            } @else if (getPosition(i) === 2) {
+              🥈
+            } @else if (getPosition(i) === 3) {
+              🥉
+            } @else {
+              #{{ getPosition(i) }}
+            }
           </div>
-        </div>
 
-        <div class="ranking-list">
-          @for (result of paginatedRanking; track result.playerName + result.score + result.createdAt; let i = $index) {
-            <article
-              class="ranking-item"
-              [class.ranking-item--winner]="result.won"
-            >
-              <div class="ranking-item__position">
-                @if (getPosition(i) === 1) {
-                  🥇
-                } @else if (getPosition(i) === 2) {
-                  🥈
-                } @else if (getPosition(i) === 3) {
-                  🥉
-                } @else {
-                  #{{ getPosition(i) }}
-                }
-              </div>
-
-              <div class="ranking-item__player">
-                <strong>{{ result.playerName }}</strong>
-                <span>
-                  {{ result.correctAnswers }} preguntas acertadas
-                </span>
-              </div>
-
-              <div class="ranking-item__score">
-                <strong>{{ result.score }}</strong>
-                <span>puntos</span>
-              </div>
-
-              <div class="ranking-item__path">
-                @if (result.won) {
-                  <span class="gold-symbol">💰</span>
-                } @else {
-                  <span class="question-symbol">P{{ result.reachedQuestion }}</span>
-                }
-
-                <small>{{ getPathLabel(result) }}</small>
-              </div>
-
-              <div class="ranking-item__date">
-                {{ getDateLabel(result.createdAt) }}
-              </div>
-            </article>
-          }
-        </div>
-
-        @if (totalPages > 1) {
-          <div class="pagination">
-            <button
-              type="button"
-              class="pagination__btn"
-              [disabled]="currentPage === 1"
-              (click)="previousPage()"
-            >
-              ← Anterior
-            </button>
-
+          <div class="ranking-item__player">
+            <strong>{{ result.playerName }}</strong>
             <span>
-              Página {{ currentPage }} de {{ totalPages }}
+              {{ result.correctAnswers }} preguntas acertadas
             </span>
-
-            <button
-              type="button"
-              class="pagination__btn"
-              [disabled]="currentPage === totalPages"
-              (click)="nextPage()"
-            >
-              Siguiente →
-            </button>
           </div>
-        }
+
+          <div class="ranking-item__score">
+            <strong>{{ result.score }}</strong>
+            <span>puntos</span>
+          </div>
+
+          <div class="ranking-item__path">
+            @if (result.won) {
+              <span class="gold-symbol">💰</span>
+            } @else {
+              <span class="question-symbol">P{{ result.reachedQuestion }}</span>
+            }
+
+            <small>{{ getPathLabel(result) }}</small>
+          </div>
+
+          <div class="ranking-item__date">
+            {{ getDateLabel(result.createdAt) }}
+          </div>
+        </article>
+      }
+    </div>
+
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button
+          type="button"
+          class="pagination__btn"
+          [disabled]="currentPage === 1"
+          (click)="previousPage()"
+        >
+          ← Anterior
+        </button>
+
+        <span>
+          Página {{ currentPage }} de {{ totalPages }}
+        </span>
+
+        <button
+          type="button"
+          class="pagination__btn"
+          [disabled]="currentPage === totalPages"
+          (click)="nextPage()"
+        >
+          Siguiente →
+        </button>
       </div>
     }
   </div>
+}
 </section>

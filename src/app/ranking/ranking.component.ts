@@ -16,7 +16,7 @@ export class RankingComponent implements OnInit {
   itemsPerPage = 10;
   totalResults = 0;
 
-  loading = false;
+  loading = true;
   errorMessage = '';
 
   constructor(private rankingService: RankingService) {}
