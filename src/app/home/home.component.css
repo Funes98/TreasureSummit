@@ -475,3 +475,21 @@ h1 {
     font-size: 0.88rem;
   }
 }
+.home__legal {
+  position: relative;
+  z-index: 2;
+  margin-top: 2rem;
+  padding-bottom: 1.2rem;
+  text-align: center;
+}
+
+.home__legal a {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.home__legal a:hover {
+  color: rgba(255, 209, 102, 0.85);
+}

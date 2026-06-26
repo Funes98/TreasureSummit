@@ -8,6 +8,7 @@ import { DefeatComponent } from './game/defeat/defeat.component';
 import { gameGuard } from './guards/game.guard';
 import { victoryGuard } from './guards/victory.guard';
 import { defeatGuard } from './guards/defeat.guard';
+import { PrivacyComponent } from './privacy/privacy.component';
 
 export const routes: Routes = [
     {path:'',component:HomeComponent},
@@ -15,8 +16,8 @@ export const routes: Routes = [
     {path:'contact',component:ContactComponent},
     {path:'game',component:GameComponent,canActivate: [gameGuard]},
     {path:'victory',component:VictoryComponent,canActivate: [victoryGuard]},
-    {path:'defeat',component:DefeatComponent,canActivate: [defeatGuard]}
-
-    //Poner guardianes
+    {path:'defeat',component:DefeatComponent,canActivate: [defeatGuard]},
+    {path: 'privacy',component: PrivacyComponent},
+    { path: '**', redirectTo: '' }
 
 ];
