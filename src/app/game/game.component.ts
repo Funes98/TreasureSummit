@@ -24,8 +24,7 @@ playerName = localStorage.getItem('treasure_player_name') || 'Aventurero';
 
   timeLeft = 30;
   private timerId?: number;
-
-  usedSecondChance = false;
+  
   wildcardUsedThisQuestion = false;
   showWrongAnswerChoice = false;
 
